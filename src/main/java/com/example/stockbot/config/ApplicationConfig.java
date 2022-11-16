@@ -18,7 +18,7 @@ public class ApplicationConfig {
 
     @Bean
     public OpenApi api() {
-        String ssoToken = "t.XpsFA8KRlLLEv4Mx_GP1XnbJuBfOb4r1iCM2fl5CLIucKFt171l35X9nFR1iiIDrT98o_bWFD9IrCgkXdhOgxg";
+        String ssoToken = "t.PCNnkvLT7uc3-NNn4OBApy_CYQfPMu1rnMrzSewQQ-D9--yfvXnaCdrzxOIzUcY17nRo8oaYMEy2o6Ed_DjpJw";
         return new OkHttpOpenApi(ssoToken, apiConfig.getIsSandBoxMode());
     }
 }

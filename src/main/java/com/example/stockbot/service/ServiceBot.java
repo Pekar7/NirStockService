@@ -66,15 +66,17 @@ public class ServiceBot extends TelegramLongPollingBot {
                 case "/help":
                     sendMessage(chatId, HELP_TEXT);
                     break;
-                case "secret":
-                    sendMessage(chatId, TEXT_BIO);
-                    break;
                 default:
                     getStockByTickerBot(chatId, messageText);
                     break;
             }
         }
 
+    }
+
+    private String sendMes(long chatId, String message) {
+        sendMessage(chatId, message);
+        return "Ok";
     }
 
 
@@ -90,8 +92,8 @@ public class ServiceBot extends TelegramLongPollingBot {
     }
 
     private void startCommandReceived(long chatId, String firstName) {
-        String answer = "Привет, " + firstName + "! \nНаш бот позволяет получать информацию по ценным бумагам, используя Тикеры!" +
-                "\n\nНапример: SBER-Sberbank\nTSLA-Tesla Motors.\nСписок тикеров можно найти /help\n\nНапиши тикер нужной акции:";
+        String answer = "Привет, " + firstName + "! \nВас приветсвует виртуальный ассистент @MisisServiceBot. \nНаш бот позволяет получать информацию по ценным бумагам, используя Тикеры!"
+                + "\nУкажите Тикер.\n\nНАПРИМЕР: TSLA или SBER\nНажмите /help чтобы найти список тикеров";
         sendMessage(chatId, answer);
     }
 

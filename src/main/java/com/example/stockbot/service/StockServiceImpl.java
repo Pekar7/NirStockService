@@ -6,20 +6,24 @@ import com.example.stockbot.exception.StockNotFoundException;
 import com.example.stockbot.model.Currency;
 import com.example.stockbot.model.PriceInfo;
 import com.example.stockbot.model.Stock;
+import com.example.stockbot.model.StockInfo;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import lombok.var;
 import org.springframework.stereotype.Service;
 import ru.tinkoff.invest.openapi.OpenApi;
-import ru.tinkoff.invest.openapi.model.rest.CandleResolution;
-import ru.tinkoff.invest.openapi.model.rest.Candles;
+import ru.tinkoff.invest.openapi.model.rest.*;
+
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TinkoffStockService implements StockService {
+public class StockServiceImpl implements StockService {
     private final OpenApi api;
 
 
@@ -27,7 +31,7 @@ public class TinkoffStockService implements StockService {
     public Stock getStockByTicker(String ticker) {
         var contextApi = api.getMarketContext().searchMarketInstrumentsByTicker(ticker);
         var listContext = contextApi.join().getInstruments();
-        if (listContext.isEmpty()){
+        if (listContext.isEmpty()) {
             return null;
         }
         var item = listContext.get(0);
@@ -71,4 +75,23 @@ public class TinkoffStockService implements StockService {
         return context.join().get();
     }
 
+    @SneakyThrows
+    @Override
+    public List<StockInfo> getInfo() {
+        List<StockInfo> stocks = new ArrayList<>();
+        api.getMarketContext().getMarketStocks().get().getInstruments().forEach(el -> {
+            stocks.add(new StockInfo(el.getTicker(), el.getFigi(), el.getName()));
+        });
+        return stocks;
+    }
+
+    @SneakyThrows
+    @Override
+    public String getIdFromPortfolio() {
+        return api.getUserContext().getAccounts().join().getAccounts().get(0).getBrokerAccountId();
+    }
 }
+
+
+
+//        SB44263913
