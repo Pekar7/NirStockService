@@ -70,32 +70,19 @@ public class StockServiceImpl implements StockService {
                 "TINKOFF");
     }
 
-
     @Override
-    public PriceInfo getPriceByFigi(String figi) {
-        var context = api.getMarketContext().getMarketOrderbook(figi, 0);
-        var list = context.join().get();
-        return new PriceInfo(
-                list.getLastPrice(),
-                list.getDepth(),
-                list.getLimitUp(),
-                list.getLimitDown(),
-                list.getTradeStatus());
-    }
-
-    @Override
-    public Candles getCandles(String figi) {
+    public Candles getCandles(String ticker) {
+        String figi = getStockByTicker(ticker).getFigi();
         var context = api.getMarketContext()
                 .getMarketCandles(figi, OffsetDateTime.now().minusMonths(5), OffsetDateTime.now(), CandleResolution.DAY);
         var listContext = context.join().get().getCandles();
 
-        List<CandleModel> candlesList = new ArrayList<>();
 
         BarSeries series = new BaseBarSeriesBuilder().build();
         List<String[]> data = new ArrayList<String[]>();
 
         for (int i = 0; i < listContext.size(); i++) {
-            data.add(new String[]{String.valueOf(candlesList.get(i).getClose()), "Candle", candlesList.get(i).getTime().format(DateTimeFormatter.ofPattern("dd:MM"))});
+            data.add(new String[]{String.valueOf(listContext.get(i).getC()), "Candle", listContext.get(i).getTime().format(DateTimeFormatter.ofPattern("dd:MM"))});
         }
 
 
@@ -115,7 +102,8 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public File getCandlesBySMA(String figi) {
+    public File getCandlesBySMA(String ticker) {
+        String figi = getStockByTicker(ticker).getFigi();
         var context = api.getMarketContext()
                     .getMarketCandles(figi, OffsetDateTime.now().minusMonths(5), OffsetDateTime.now(), CandleResolution.DAY);
             var listContext = context.join().get().getCandles();
@@ -150,9 +138,9 @@ public class StockServiceImpl implements StockService {
 
 
     @Override
-    public Resource loadAsResourceSMA(String figi) {
+    public Resource loadAsResourceSMA(String ticker) {
 
-        File a = getCandlesBySMA(figi);
+        File a = getCandlesBySMA(ticker);
         try {
             Path file = Paths.get("src/main/resources/data/AnalyseDataSetSMA.csv");
             Resource resource = new UrlResource(file.toUri());
@@ -169,7 +157,8 @@ public class StockServiceImpl implements StockService {
 
 
     @Override
-    public File getCandlesByEMA(String figi) {
+    public File getCandlesByEMA(String ticker) {
+        String figi = getStockByTicker(ticker).getFigi();
         var context = api.getMarketContext()
                 .getMarketCandles(figi, OffsetDateTime.now().minusMonths(5), OffsetDateTime.now(), CandleResolution.DAY);
         var listContext = context.join().get().getCandles();
