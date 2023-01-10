@@ -86,7 +86,7 @@ public class ServiceBot extends TelegramLongPollingBot {
             sendMessage(chatId, "Извините акция с тикером '" + messageText + "' не найдена\nЕсли нужан помощь используйте команду /help");
         } else {
             String text = "Акция: " + answer.getName() + "\nЦена: " + answer.getPrice() + " " + answer.getCurrency()
-                    + "\nПродается в количестве: " + answer.getLot() +" лота\nFIGI:" +answer.getFigi()+ "\tTICKER: " + answer.getTicker();
+                    + "\nПродается в количестве: " + answer.getLot() +" лота\nFIGI:" +answer.getFigi()+ "\nTICKER: " + answer.getTicker();
             sendMessage(chatId, text);
         }
     }

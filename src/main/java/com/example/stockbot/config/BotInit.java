@@ -20,7 +20,7 @@ public class BotInit {
         try {
             telegramBotsApi.registerBot(bot);
         } catch (TelegramApiException e) {
-
+            e.getMessage();
         }
     }
 }

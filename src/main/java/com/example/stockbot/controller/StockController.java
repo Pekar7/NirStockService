@@ -7,8 +7,13 @@ import com.example.stockbot.model.StockInfo;
 import com.example.stockbot.service.StockService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.tinkoff.invest.openapi.model.rest.Candles;
+
+import java.io.File;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -31,21 +36,32 @@ public class StockController {
     }
 
     @Operation(summary = "Get Candles Information interval 1 hour, for 1 day", tags = "FIGI")
-    @GetMapping("getCandleInfoByFIGI/{figi}")
+    @GetMapping("getCandleByFIGI/{figi}")
     public Candles getInfoCandlesByFigi(@PathVariable String figi) {
         return stockService.getCandles(figi);
     }
 
-    @Operation(summary = "Get Information about all Stocks", tags = "ALL")
-    @GetMapping("getInfoAboutAllStocks")
-    public List<StockInfo> getAllStocksInfo() {
-        return stockService.getInfo();
+    @Operation(summary = "Get Candles Information interval 1 hour, for 1 day", tags = "FIGI")
+    @GetMapping("getCandleBySMA/{figi}")
+    public File getInfoCandlesBySMA(@PathVariable String figi) {
+        return stockService.getCandlesBySMA(figi);
     }
 
-    @Operation(summary = "Get Id from Portfolio", tags = "PORTFOLIO")
-    @GetMapping("getIdFromPortfolio")
-    public String getIdFromPortfolio() {
-        return stockService.getIdFromPortfolio();
+    @Operation(summary = "Download CSV file with SMA Indecator", tags = "Indecators")
+    @GetMapping("/files/SMA/{figi}")
+    @ResponseBody
+    public ResponseEntity<Resource> getFileSMA(@PathVariable String figi) {
+        Resource file = stockService.loadAsResourceSMA(figi);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
+    @Operation(summary = "Download CSV file with EMA Indecator", tags = "Indecators")
+    @GetMapping("/files/EMA/{figi}")
+    @ResponseBody
+    public ResponseEntity<Resource> getFileEMA(@PathVariable String figi) {
+        Resource file = stockService.loadAsResourceEMA(figi);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+    }
 }
