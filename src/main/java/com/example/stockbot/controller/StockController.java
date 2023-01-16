@@ -1,20 +1,13 @@
 package com.example.stockbot.controller;
 
 
-import com.example.stockbot.model.PriceInfo;
 import com.example.stockbot.model.Stock;
-import com.example.stockbot.model.StockInfo;
 import com.example.stockbot.service.StockService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.tinkoff.invest.openapi.model.rest.Candles;
 
-import java.io.File;
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -35,6 +28,7 @@ public class StockController {
         return stockService.getCandles(ticker);
     }
 
+    /*
     @Operation(summary = "Download CSV file with SMA Indecator", tags = "Indecators")
     @GetMapping("/files/SMA/{ticker}")
     @ResponseBody
@@ -52,4 +46,5 @@ public class StockController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
+     */
 }

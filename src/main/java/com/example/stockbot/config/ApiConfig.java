@@ -7,7 +7,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @Data
 @ConfigurationProperties(prefix = "api")
-@PropertySource("application.yml")
+@PropertySource("application.properties")
 public class ApiConfig {
     private Boolean isSandBoxMode;
 
